@@ -20,27 +20,30 @@
        
     .centerimg {
       text-align: center;
-      Padding: 25px,25px,25px,25px;
+      Padding: 75px,75px,75px,75px;
     }
     
   </style>
 <body>
   <h1>Red Panda</h1>
   <a href="https://github.com/Business1sg00d/AutomaticNMAP">I used this script to scan the target.</a>
-  <p1>Ports 22 and 8080 are the only ones open. No significant information is given.<br>
-  <p1>No open ports found on UPD<br>
-  <p1>A Whatweb scan shows 'Made with Spring Boot'. Looks like we'll be dealing with java<br>
+  <p1>Ports 22 and 8080 are the only ones open. No significant information is given. No open ports found on UPD. A Whatweb scan shows 'Made with Spring Boot'. Looks like we'll be dealing with java<br>
   <div class="centerimg">
     <img src="docs/assets/whatwebpanda.png">
   </div>
-  <p1>None of the service versions showed any known vulnerabilities<br>
-  <p1>wfuzz -w /usr/share/wordlists/SecLists/Discovery/Web-Content/common.txt -u http://10.10.11.170:8080/FUZZ -f wfuzz_common.txt<br>
+  <p1>None of the service versions showed any known vulnerabilities. wfuzz -w /usr/share/wordlists/SecLists/Discovery/Web-Content/common.txt -u http://10.10.11.170:8080/FUZZ -f wfuzz_common.txt<br>
   <p1>The above fuzz yielded the following:<br>
   <div class="centerimg">
     <img src="docs/assets/ffuf.png">
   </div>
-  <p1><br>
-  <p1><br>
-  <p1><br>
+  <p1>Visiting http://10.10.10.20:8080 shows an input field accepting user input. Entering a blank field gives a page mentioning injection attacks. Entering a simple SSTI(Server Side Template Injection) string shows the following results:<br>
+  <div class="centerimg">
+    <img src="docs/assets/blank.png">
+  </div>
+  <p1>Here you could setup burpsuite in order to go through a list of characters to see which ones return a value. I did a simple google search to find other variations of ${7*7}<br>
+  <p1>Eventually I came accross *{7*7}. Simply replace '$' with '*'<br>
+  <div class="centerimg">
+    <img src="docs/assets/seven.png">
+  </div>
 </body>
 </html>
