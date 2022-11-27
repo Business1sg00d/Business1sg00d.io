@@ -82,12 +82,12 @@
   <div class="centerimg">
     <img src="docs/assets/logged.png">
   </div>
-  <p1>So how to test the hypothesis? I'm thinking what's a simple command I know that will execute on the server? Lets try to get the system to show us what's in the /etc/passwd file. I will list the steps to accomplish this:<br>
+  <p1>So how to test the hypothesis? I'm thinking what's a simple command I know that will execute on the server? Lets try to get the system to show us what's in the /etc/passwd file. I will list the steps to accomplish this(more explicit steps are listed past the cure panda pic):<br>
   <h1>1.) Use a jpg to get the server to point to a writable file for woodenk. In this case, it will be /tmp/file, where the file is the xml document I will describe below. One can use the 'exiftool' to ammend/change metadata in images.<br>
   <h1>2.) Place a file with the XML extension in this path. Make sure it fits the expected format in the java code!<br>
   <h1>3.) Copy what's in the XML document for woodenk or damian(doesn't matter), and paste to your new file. If you don't understand why, study the code further.<br>
   <h1>4.) Use the format provided in the websites above to edit the new XML file with the desired payload. DONT CLOSE THE FILE YET!<br>
-  <h1>5.) MAKE SURE you execute the entity in the element that is ‘unfiltered’...I won't be too explicit here as I want to encourage those who struggle here like me to put some more work in. That's how we'll learn. For those who need explicit details and don't want to watch na5c4rs youtube video, I will show more explicit steps below the cute panda.<br>
+  <h1>5.) MAKE SURE you execute the entity in the element that is ‘unfiltered’...I won't be too explicit here as I want to encourage those who struggle here like me to put some more work in. That's how we'll learn. For those who need explicit details, I will show more explicit steps below the cute panda.<br>
   <h1>6.) Echo the correct format into the redpanda log file, then wait...Performing these steps correctly should give the following results when reading the XML file created. We have thus confirmed that the server is vulnerable to XXE.<br>
   <div class="centerimg">
     <img src="docs/assets/confirmed.png">
@@ -99,6 +99,15 @@
   <div class="centerimg">
     <img src="docs/assets/exiftool.png">
   </div>
-  <h1><br>
+  <h1>Move the jpg to the target /tmp folder via an http server or your choice of file transfer.<br>
+  <h1>Copy either users XML document then paste in an xml file in your local terminal. (To show that copying isn't exactly necessary, read further and look at the image; if it doesn't make sense to you, go back and review the code). If we've already confirmed that the server is vulnerable to XXE, AND we know the ssh service allows root login, then the payload should look like such:<br>
+  <div class="centerimg">
+    <img src="docs/assets/xmlDocument.png">
+  </div>
+  <h1>Now we need to add the trigger for the XXE injection. Go to the directory with the redpanda log. 'echo “200||1||1||/../../../../../../../tmp/spawn.jpg” >> redpanda.log'. Wait for the java program to run. Check the xml file.<br>
+  <div class="centerimg">
+    <img src="docs/assets/rsakey.png">
+  </div>
+  <h1>Ya'll should know what to do from here.</h1>
 </body>
 </html>
