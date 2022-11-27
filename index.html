@@ -64,7 +64,14 @@
   </div>
   <p1>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</p1>
   <div class="p2">Post-Exploitation</div>
-  <p1>Noticed via pspy64 that everytime root executes the jar file, a cleanup script is executed; There's also a ‘run_credits.sh’ in root directory. We have access to this due to being in the 'logs' group. But nothing quite stands out with the 'xml' documents inside. Since every other path to privesc has led to a wall, I need to look at the jar file to find something. Moving the file over to my local machine with a python http server, allows me to use the jd-gui tool (On kali: sudo apt-get install jd-gui) in order to decompile code into a readable format. I suppose a good thought process in regards to finding where to look in the code would be to consider how it's applied. We are dealing with a web application. Within the jar file, there are NUMEROUS classes with many many lines of code. So which ones matter most in our instance? logparser stands out to me. Log as in logs?<br>
+  <p1>Noticed via pspy64 that root executes 'run_credits.sh' script, and a jar file. It looks like xml files are being deleted too.<br>
+  <div class="centerimg">
+    <img src="docs/assets/pspy64.png">
+  </div>
+  <div class="centerimg">
+    <img src="docs/assets/jarfile.png">
+  </div>
+  <p1>We have access to a 'credits' directory in root directory due to being in the 'logs' group. But nothing quite stands out with the 'xml' documents inside. Since every other path to privesc has led to a wall, I need to look at the jar file to find something. Moving the file over to my local machine with a python http server, allows me to use the jd-gui tool (On kali: sudo apt-get install jd-gui) in order to decompile code into a readable format. I suppose a good thought process in regards to finding where to look in the code would be to consider how it's applied. We are dealing with a web application. Within the jar file, there are NUMEROUS classes with many many lines of code. So which ones matter most in our instance? logparser stands out to me. Log as in logs?<br>
   <div class="centerimg">
     <img src="docs/assets/java1.png">
   </div>
