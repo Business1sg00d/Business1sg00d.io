@@ -75,7 +75,9 @@
     <img src="docs/assets/cutepandas.png">
   </div>
   <p1>So to summarize thus far and to elaborate further: Everytime the jar file is executed, the redpanda log is analyzed for a ‘uri’ that contains a ‘.jpg.’ This line is then passed to the getArtist function, where METADATA(hint hint) in the jpg file is searched. If an ‘Artist’ tag is found, the data associated with ‘Artist’ is returned. This information is then printed out to the system, as well as being added to a file path. Then it's finally inserted as a parameter(xmlPath) in addViewTo, along with the path retrieved from the redpanda log. In the addViewTo function, each child element inside the xml document (referenced to by the ‘xmlPath’ variable) is matched to the string ‘image’. If this is true, then the element ‘uri’ is checked for equality to the ‘uri’ found from the redpanda log. This is what adds a counter next to the jpg when looked up via URL http://10.10.11.170:8080/img/smooch.jpg. The last two lines write the changed elements to the xml file, updating it. Transfer the java file to your local terminal and read it for yourself.<br>
-  <p1>It looks like ‘uri’, or the expected path to the image and user file, is NOT filtered. uri is recieved from two places:<br>
-  <h1>1.)The panda log. Here the uri points the system to where the jpg is located when looked up via URL.<br>
+  <h1>It looks like ‘uri’, or the expected path to the image and user file, is NOT filtered. uri is recieved from two places:<br>
+  <h1>1.) The panda log. Here the uri points the system to where the jpg is located when looked up via URL.<br>
+  <h1>2.) The header inside the xml files found in /credits. Here the uri is compared to the one found in the panda log.<br>
+  <p1>Seeing an XML file being written to with essentially what is unfiltered user input leads me to suspect the system is vulnerable to XML External Entity Injection(XXE). The following sites helped me better understand this type of web attack: <a href="https://book.hacktricks.xyz/pentesting-web/xxe-xee-xml-external-entity">hacktricks.xyz</a> and also <a href="https://portswigger.net/web-security/xxe">portswigger.net</a><br>
 </body>
 </html>
