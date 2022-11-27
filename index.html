@@ -16,11 +16,11 @@
       color: green;
       font-size: 22;
       text-align: left;
-      padding: 80px;
     }
        
     .centerimg {
       text-align: center;
+      Padding: 25px,25px,25px,25px;
     }
     
   </style>
@@ -34,5 +34,13 @@
     <img src="docs/assets/whatwebpanda.png">
   </div>
   <p1>None of the service versions showed any known vulnerabilities<br>
+  <p1>wfuzz -w /usr/share/wordlists/SecLists/Discovery/Web-Content/common.txt -u http://10.10.11.170:8080/FUZZ -f wfuzz_common.txt<br>
+  <p1>The above fuzz yielded the following:<br>
+  <div class="centerimg">
+    <img src="docs/assets/ffuf.png">
+  </div>
+  <p1><br>
+  <p1><br>
+  <p1><br>
 </body>
 </html>
